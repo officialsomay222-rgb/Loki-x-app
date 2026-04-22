@@ -25,10 +25,9 @@ fun ChatScreen(viewModel: LokiViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0F172A)) // dark slate background
+            .background(Color(0xFF0F172A))
             .padding(16.dp)
     ) {
-        // Chat History (Replicating MessageBubble/TimelineItem)
         LazyColumn(
             modifier = Modifier.weight(1f),
             reverseLayout = false
@@ -44,7 +43,6 @@ fun ChatScreen(viewModel: LokiViewModel) {
             }
         }
         
-        // Chat Input UI (Replicating ChatInput.tsx)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically

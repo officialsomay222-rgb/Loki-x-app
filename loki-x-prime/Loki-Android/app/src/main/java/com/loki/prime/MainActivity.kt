@@ -15,7 +15,11 @@ class MainActivity : ComponentActivity() {
     private val viewModel: LokiViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LokiViewModel(database) as T
+                if (modelClass.isAssignableFrom(LokiViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return LokiViewModel(database) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
             }
         }
     }
@@ -23,7 +27,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Entry point for the Jetpack Compose UI
             ChatScreen(viewModel = viewModel)
         }
     }
