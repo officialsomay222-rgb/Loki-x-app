@@ -1,11 +1,13 @@
-name: Android Kotlin CI
+name: Build Android APK
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ] # Push karne par automatic chalega
+  workflow_dispatch: # GitHub Actions tab se manual run karne ke liye bhi
 
 jobs:
   build:
-    name: Build Native Android APK
+    name: Build Native APK
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +21,21 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./Loki-Android/gradlew || true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-      - name: Build with Gradle (APK)
+      - name: Generate Gradle Wrapper & Build APK
         working-directory: ./Loki-Android
-        run: ./gradlew assembleDebug --stacktrace
-        # Note: If wrapper is missing, use gradle directly
-        # run: gradle assembleDebug
+        run: |
+          # Agar gradlew file nahi hai, to global gradle use karke generate kar lenge
+          if [ ! -f "./gradlew" ]; then
+            gradle wrapper
+          fi
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK File
         uses: actions/upload-artifact@v4
         with:
-          name: loki-x-prime-debug-apk
+          name: Loki-X-Prime-App
           path: Loki-Android/app/build/outputs/apk/debug/app-debug.apk
